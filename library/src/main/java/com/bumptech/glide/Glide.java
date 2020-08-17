@@ -107,6 +107,9 @@ import java.util.Set;
  * A singleton to present a simple static interface for building requests with {@link
  * RequestBuilder} and maintaining an {@link Engine}, {@link BitmapPool}, {@link
  * com.bumptech.glide.load.engine.cache.DiskCache} and {@link MemoryCache}.
+ *
+ * Glide是一个单例类
+ * 通过get(Context)方法可以获取到它的实例
  */
 public class Glide implements ComponentCallbacks2 {
   private static final String DEFAULT_DISK_CACHE_DIR = "image_manager_disk_cache";
@@ -177,6 +180,9 @@ public class Glide implements ComponentCallbacks2 {
    * Get the singleton.
    *
    * @return the singleton
+   *
+   * get()方法获取到Glide的实例
+   * 使用了双重检查模式，来保证其线程安全
    */
   @NonNull
   // Double checked locking is safe here.
@@ -838,7 +844,7 @@ public class Glide implements ComponentCallbacks2 {
    *     https://github.com/android/android-ktx/pull/161#issuecomment-363270555.
    */
   @SuppressWarnings("deprecation")
-  @Deprecated
+  @Deprecated   //过时
   @NonNull
   public static RequestManager with(@NonNull android.app.Fragment fragment) {
     return getRetriever(fragment.getActivity()).get(fragment);

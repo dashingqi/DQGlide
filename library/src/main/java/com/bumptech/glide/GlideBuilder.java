@@ -503,25 +503,31 @@ public final class GlideBuilder {
   @NonNull
   Glide build(@NonNull Context context) {
     if (sourceExecutor == null) {
+      //创建网络请求线程池
       sourceExecutor = GlideExecutor.newSourceExecutor();
     }
 
     if (diskCacheExecutor == null) {
+      //创建磁盘缓存线程池
       diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();
     }
 
     if (animationExecutor == null) {
+      //创建动画线程池
       animationExecutor = GlideExecutor.newAnimationExecutor();
     }
 
     if (memorySizeCalculator == null) {
+      //创建内存大小计算器
       memorySizeCalculator = new MemorySizeCalculator.Builder(context).build();
     }
 
     if (connectivityMonitorFactory == null) {
+      //创建默认网络链接监视器厂
       connectivityMonitorFactory = new DefaultConnectivityMonitorFactory();
     }
 
+    //创建Bitmap池
     if (bitmapPool == null) {
       int size = memorySizeCalculator.getBitmapPoolSize();
       if (size > 0) {
@@ -536,13 +542,16 @@ public final class GlideBuilder {
     }
 
     if (memoryCache == null) {
+      //创建内存缓存池
       memoryCache = new LruResourceCache(memorySizeCalculator.getMemoryCacheSize());
     }
 
     if (diskCacheFactory == null) {
+      //创建磁盘缓存池
       diskCacheFactory = new InternalCacheDiskCacheFactory(context);
     }
 
+    //初始化引擎类
     if (engine == null) {
       engine =
           new Engine(
@@ -561,10 +570,12 @@ public final class GlideBuilder {
       defaultRequestListeners = Collections.unmodifiableList(defaultRequestListeners);
     }
 
+    //创建RequestManagerRetriever对象
     RequestManagerRetriever requestManagerRetriever =
         new RequestManagerRetriever(
             requestManagerFactory, waitForFirstFrameBeforeEnablingHardwareBitmaps);
 
+    //创建Glide对象
     return new Glide(
         context,
         engine,

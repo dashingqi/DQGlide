@@ -74,6 +74,7 @@ public class RequestManagerRetriever implements Handler.Callback {
 
   public RequestManagerRetriever(
       @Nullable RequestManagerFactory factory, boolean addFirstFrameWaiter) {
+    // 当传递的RequestManagerFactory为null，就使用默认的 ---> DEFAULT_FACTORY
     this.factory = factory != null ? factory : DEFAULT_FACTORY;
     firstFrameWaiter = addFirstFrameWaiter ? new FirstFrameWaiter() : null;
     handler = new Handler(Looper.getMainLooper(), this /* Callback */);
@@ -91,6 +92,8 @@ public class RequestManagerRetriever implements Handler.Callback {
           // ApplicationLifecycle.
 
           // TODO(b/27524013): Factor out this Glide.get() call.
+          //使用Application类型的Context来获取一个Glide Application的生命周期是和程序一起存活的
+
           Glide glide = Glide.get(context.getApplicationContext());
           applicationManager =
               factory.build(
@@ -134,12 +137,17 @@ public class RequestManagerRetriever implements Handler.Callback {
 
   @NonNull
   public RequestManager get(@NonNull FragmentActivity activity) {
+    //如果没在主线程中
     if (Util.isOnBackgroundThread()) {
       return get(activity.getApplicationContext());
     } else {
+      //判断当前的Activity没有被销毁
       assertNotDestroyed(activity);
       maybeRegisterFirstFrameWaiter(activity);
+      //获取到兼容性的FragmentManager对象 这个FragmentManager对象就是用来讲一个Fragment添加到Activity中
+      //用来观察Activity的声明周期从而来决定Glide是否加载
       FragmentManager fm = activity.getSupportFragmentManager();
+      //调用supportFragmentGet()方法，
       return supportFragmentGet(activity, fm, /*parentHint=*/ null, isActivityVisible(activity));
     }
   }
@@ -386,6 +394,7 @@ public class RequestManagerRetriever implements Handler.Callback {
       @NonNull android.app.FragmentManager fm,
       @Nullable android.app.Fragment parentHint,
       boolean isParentVisible) {
+    //创建RequestManagerFragment
     RequestManagerFragment current = getRequestManagerFragment(fm, parentHint);
     RequestManager requestManager = current.getRequestManager();
     if (requestManager == null) {
@@ -441,11 +450,15 @@ public class RequestManagerRetriever implements Handler.Callback {
       @NonNull FragmentManager fm,
       @Nullable Fragment parentHint,
       boolean isParentVisible) {
+    //创建SupportRequestManagerFragment实例，
     SupportRequestManagerFragment current = getSupportRequestManagerFragment(fm, parentHint);
+    // 一个Fragment对应一个RequestManager
     RequestManager requestManager = current.getRequestManager();
     if (requestManager == null) {
       // TODO(b/27524013): Factor out this Glide.get() call.
       Glide glide = Glide.get(context);
+      //factory ---> RequestManagerFactory   -----> 指向的是 DEFAULT_FACTORY
+      //创建一个requestManager
       requestManager =
           factory.build(
               glide, current.getGlideLifecycle(), current.getRequestManagerTreeNode(), context);
@@ -455,8 +468,10 @@ public class RequestManagerRetriever implements Handler.Callback {
       if (isParentVisible) {
         requestManager.onStart();
       }
+      //设置一个RequestManager
       current.setRequestManager(requestManager);
     }
+    //返回创建好的RequestManager
     return requestManager;
   }
 

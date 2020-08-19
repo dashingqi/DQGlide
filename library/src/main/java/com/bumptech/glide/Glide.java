@@ -190,6 +190,7 @@ public class Glide implements ComponentCallbacks2 {
   public static Glide get(@NonNull Context context) {
     if (glide == null) {
       GeneratedAppGlideModule annotationGeneratedModule =
+          //获取到通过注解修饰的GlideModules
           getAnnotationGeneratedGlideModules(context.getApplicationContext());
       synchronized (Glide.class) {
         if (glide == null) {
@@ -258,6 +259,12 @@ public class Glide implements ComponentCallbacks2 {
     initializeGlide(context, new GlideBuilder(), generatedAppGlideModule);
   }
 
+  /**
+   * 初始化Glide
+   * @param context
+   * @param builder
+   * @param annotationGeneratedModule
+   */
   @GuardedBy("Glide.class")
   @SuppressWarnings("deprecation")
   private static void initializeGlide(

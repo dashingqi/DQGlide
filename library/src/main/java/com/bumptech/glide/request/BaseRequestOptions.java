@@ -1096,6 +1096,9 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
    * of the set of options in this {@code T} object and the given {@code T} object that were
    * explicitly set. If the values of any of the options conflict, the values in the returned {@code
    * T} object will be set to those in the given {@code T} object.
+   *
+   * 在该apply()方法中 读取之前的配置项
+   * 比如 占位图，错误图，等级，缓存等信息
    */
   @NonNull
   @CheckResult

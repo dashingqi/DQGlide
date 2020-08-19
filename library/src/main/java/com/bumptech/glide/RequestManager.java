@@ -421,6 +421,8 @@ public class RequestManager
    * any of those subclasses may also be returned.
    *
    * @return A new request builder for loading a {@link Drawable}.
+   *
+   * asDrawable() -----> as()
    */
   @NonNull
   @CheckResult
@@ -456,6 +458,9 @@ public class RequestManager
    * Equivalent to calling {@link #asDrawable()} and then {@link RequestBuilder#load(String)}.
    *
    * @return A new request builder for loading a {@link Drawable} using the given model.
+   *
+   * RequestManager # load()方法 中
+   * 都有都有调用 asDrawable().load()
    */
   @NonNull
   @CheckResult
@@ -589,6 +594,7 @@ public class RequestManager
    *
    * @param resourceClass The resource to decode.
    * @return A new request builder for loading the given resource class.
+   * 构建一个RequestBuilder对象
    */
   @NonNull
   @CheckResult

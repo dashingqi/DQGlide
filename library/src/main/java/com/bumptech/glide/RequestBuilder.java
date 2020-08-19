@@ -83,6 +83,11 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
   // We only override the method to change the return type, not the functionality.
   @SuppressLint("CheckResult")
   @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
+  /**
+   * 使用在with流程中创建的 RequestManager和Glide 来创建RequestBuilder对象
+   *
+   * 创建RequestBuilder 时调用了apply()
+   */
   protected RequestBuilder(
       @NonNull Glide glide,
       RequestManager requestManager,
@@ -130,6 +135,8 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
    *
    * @see RequestOptions#apply(BaseRequestOptions)
    * @return This request builder.
+   *
+   * 在apply()中 调用了 父类的 apply()
    */
   @NonNull
   @CheckResult
@@ -405,7 +412,9 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
 
   @NonNull
   private RequestBuilder<TranscodeType> loadGeneric(@Nullable Object model) {
+    //设置加载的资源
     this.model = model;
+    //标识 model已经被加载了
     isModelSet = true;
     return this;
   }
@@ -475,6 +484,8 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
    * @see #load(Object)
    * @param string A file path, or a uri or url handled by {@link
    *     com.bumptech.glide.load.model.UriLoader}.
+   *
+   *  Generic 一般
    */
   @NonNull
   @Override
@@ -656,6 +667,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       throw new IllegalArgumentException("You must call #load() before calling #into()");
     }
 
+    //构建Request
     Request request = buildRequest(target, targetListener, options, callbackExecutor);
 
     Request previous = target.getRequest();
